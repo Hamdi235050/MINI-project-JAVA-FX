@@ -13,9 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MainController {
     @FXML
@@ -67,17 +65,21 @@ public class MainController {
     }
 
     @FXML
-    private void initializeMenuButtonClasse(){
+    private void initializeMenuButtonClasse() {
         DataFetch dataFetch = new DataFetch();
-        List<String> data = dataFetch.fetchData();
-        for (String item : data) {
-            MenuItem menuItem = new MenuItem(item);
+        Map<String, String> data = dataFetch.fetchData();
+
+         for (Map.Entry<String, String> entry : data.entrySet()) {
+            String id = entry.getKey();
+            String label = entry.getValue();
+
+            MenuItem menuItem = new MenuItem(label);
             menuItem.setOnAction(event -> {
-                handleMenuItemClick(item);
-                menuButtonClasse.setText(item); // Set the selected item as the button's text.
+                handleMenuItemClick(id);
+                menuButtonClasse.setText(label);
             });
 
-              menuButtonClasse.getItems().add(menuItem);
+            menuButtonClasse.getItems().add(menuItem);
         }
     }
     private void handleMenuItemClick(String selectedItem) {
@@ -85,21 +87,30 @@ public class MainController {
     }
     @FXML
     private void initializeMenuButtonDays() {
-         List<String> daysOfWeek = Arrays.asList(
-                "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"
-        );
+        Map<Integer, String> daysOfWeek = new HashMap<>();
+        daysOfWeek.put(1, "Lundi");
+        daysOfWeek.put(2, "Mardi");
+        daysOfWeek.put(3, "Mercredi");
+        daysOfWeek.put(4, "Jeudi");
+        daysOfWeek.put(5, "Vendredi");
+        daysOfWeek.put(6, "Samedi");
+        daysOfWeek.put(7, "Dimanche");
 
-         for (String day : daysOfWeek) {
+         for (Map.Entry<Integer, String> entry : daysOfWeek.entrySet()) {
+            Integer key = entry.getKey();
+            String day = entry.getValue();
+
             MenuItem menuItem = new MenuItem(day);
             menuItem.setOnAction(event -> {
-                handleMenuItemClickDays(day);
+                handleMenuItemClickDays(key);
                 menuButtonDays.setText(day);
             });
 
-              menuButtonDays.getItems().add(menuItem);
+            menuButtonDays.getItems().add(menuItem); // Add the menu item to the menu button
         }
     }
-    private void handleMenuItemClickDays(String selectedItem) {
+
+    private void handleMenuItemClickDays(Integer selectedItem) {
         System.out.println("Selected: " + selectedItem);
     }
     @FXML
@@ -140,11 +151,9 @@ public class MainController {
     }
     @FXML
     private void onFilterButtonClick() {
-
         String matriculeFilter = getMatriculeText();
         String contactFilter = getContactText();
         System.out.println(matricule);
-
         loadTeacherData(matriculeFilter,contactFilter);
     }
 
@@ -161,7 +170,6 @@ public class MainController {
         String matricule = getMatriculeText();
         String name = nom.getText();
         String contact = getContactText();
-
         if ( matricule.isEmpty() || name.isEmpty() || contact.isEmpty()  ) {
             showAlert(Alert.AlertType.ERROR, "Please Enter ALL THE FIELDS ");
         }

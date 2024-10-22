@@ -6,24 +6,23 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
-
 import java.util.Map;
 
-public class DataFetch {
+public class SubjectData {
     public Map<String, String> fetchData() {
         Map<String, String> data = new HashMap<>();
         DataBaseConnection dbConnection = new DataBaseConnection();
         Connection connection = dbConnection.connect();
 
         try {
-            String query = "SELECT ClasseID, NomClasse FROM CLASSES";
+            String query = "SELECT MatiereID, NomMatiere FROM matiere";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                String id = resultSet.getString("ClasseID");
-                String label = resultSet.getString("NomClasse");
-                data.put(id, label); // Use id as the key and NomClasse as the value
+                String id = resultSet.getString("MatiereID");
+                String label = resultSet.getString("NomMatiere");
+                data.put(id, label);
             }
 
             connection.close();
@@ -33,6 +32,4 @@ public class DataFetch {
 
         return data;
     }
-
-
 }
