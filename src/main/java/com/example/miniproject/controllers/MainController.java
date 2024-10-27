@@ -1,5 +1,6 @@
 package com.example.miniproject.controllers;
 import com.example.miniproject.dataFetch.DataFetch;
+import com.example.miniproject.model.Session;
 import com.example.miniproject.model.Teacher;
 import com.example.miniproject.services.SessionService;
 import com.example.miniproject.services.TeacherService;
@@ -30,16 +31,39 @@ public class MainController {
     private TextField nom;
     @FXML
     private TextField contact;
+    private String selectedClasseId;
+
     @FXML
     private TableView<Teacher> teacherTable;
     @FXML
     private TableColumn<Teacher, String> matriculeColumn;
+    @FXML
+    private TextField matriculeEnseignant;
     @FXML
     private TableColumn<Teacher, String> nameColumn;
     @FXML
     private TableColumn<Teacher, String> contactColumn;
     @FXML
     private Button Requests;
+    @FXML
+    private TableView<Session>  sessionTable;
+
+    @FXML
+    private TableColumn<Session, String> classeIdColumn;
+    private String selectedDay ;
+    private String selectedHour;
+
+    @FXML
+    private TableColumn<Session, String> matiereIdColumn;
+    @FXML
+    private TextField matiereId;
+    @FXML
+    private TableColumn<Session, String> jourColumn;
+    @FXML
+    private TableColumn<Session, String> heureColumn;
+    @FXML
+    private TableColumn<Session, String> ensIdColumn;
+
     private void switchToScene2() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/miniproject/interface2.fxml"));
@@ -51,16 +75,14 @@ public class MainController {
         }
     }
     private final TeacherService teacherService = new TeacherService();
-    private final SessionService sesisonService = new SessionService();
+    private final SessionService sessionService = new SessionService();
     public void handleAddSession(String sessionId, String classeId, String matiereId, String jour, String heure, String matriculeEnseignant) {
-        boolean isAdded = sesisonService.addSession(sessionId, classeId, matiereId, jour, heure, matriculeEnseignant);
+        boolean isAdded = sessionService.addSession( classeId, matiereId, jour, heure, matriculeEnseignant);
 
         if (isAdded) {
-            // Success handling, e.g., show confirmation or refresh UI
-            System.out.println("Session added successfully!");
+             System.out.println("Session added successfully!");
         } else {
-            // Failure handling, e.g., show error
-            System.out.println("Failed to add session.");
+             System.out.println("Failed to add session.");
         }
     }
 
@@ -73,10 +95,14 @@ public class MainController {
             String id = entry.getKey();
             String label = entry.getValue();
 
+
             MenuItem menuItem = new MenuItem(label);
-            menuItem.setOnAction(event -> {
+             menuItem.getStyleClass().add("menuItem");
+
+             menuItem.setOnAction(event -> {
                 handleMenuItemClick(id);
                 menuButtonClasse.setText(label);
+                selectedClasseId = id;
             });
 
             menuButtonClasse.getItems().add(menuItem);
@@ -101,12 +127,15 @@ public class MainController {
             String day = entry.getValue();
 
             MenuItem menuItem = new MenuItem(day);
-            menuItem.setOnAction(event -> {
+             menuItem.getStyleClass().add("menuItem");
+
+             menuItem.setOnAction(event -> {
                 handleMenuItemClickDays(key);
                 menuButtonDays.setText(day);
+                selectedDay = day ;
             });
 
-            menuButtonDays.getItems().add(menuItem); // Add the menu item to the menu button
+             menuButtonDays.getItems().add(menuItem); // Add the menu item to the menu button
         }
     }
 
@@ -119,9 +148,11 @@ public class MainController {
         for (int i = 8; i <= 17; i++) {
             hours.add(String.format("%02d:00", i));
         }
-
+        selectedHour= hours.get(0);
         for (String hour : hours) {
             MenuItem menuItem = new MenuItem(hour);
+            menuItem.getStyleClass().add("menuItem");
+
             menuItem.setOnAction(event -> {
                 handleMenuItemClickHours(hour);
                 menuButtonHours.setText(hour);
@@ -134,13 +165,22 @@ public class MainController {
     private void handleMenuItemClickHours(String selectedItem) {
         System.out.println("Selected: " + selectedItem);
     }
-
+    private void loadSessionData() {
+        ObservableList<Session> sessions = sessionService.loadSessionData();
+        sessionTable.setItems(sessions); // Load the data into the table
+    }
     @FXML
     public void initialize() {
         // Configure table columns
         matriculeColumn.setCellValueFactory(new PropertyValueFactory<>("matricule"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         contactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        classeIdColumn.setCellValueFactory(new PropertyValueFactory<>("classId"));
+        matiereIdColumn.setCellValueFactory(new PropertyValueFactory<>("nomMatiere"));
+        jourColumn.setCellValueFactory(new PropertyValueFactory<>("jour"));
+        heureColumn.setCellValueFactory(new PropertyValueFactory<>("heure"));
+        ensIdColumn.setCellValueFactory(new PropertyValueFactory<>("matriculeEnseignant"));
+
         initializeMenuButtonClasse();
         initializeMenuButtonDays();
         initializeMenuButtonHours();
@@ -148,12 +188,13 @@ public class MainController {
         Requests.setOnAction(event -> switchToScene2());
         // Load initial teacher data
         loadTeacherData(null, null);
+       loadSessionData();
     }
     @FXML
     private void onFilterButtonClick() {
         String matriculeFilter = getMatriculeText();
         String contactFilter = getContactText();
-        System.out.println(matricule);
+
         loadTeacherData(matriculeFilter,contactFilter);
     }
 
@@ -164,12 +205,35 @@ public class MainController {
     private String getMatriculeText() {
         return matricule.getText();
     }
+    @FXML
+    private void onAddSessionButtonClick() {
+         String classeId = selectedClasseId ; // Assuming the menu button's text holds the selected class
+        String jour =selectedDay   ; // Assuming the menu button's text holds the selected day
+        String heure = selectedHour; // Assuming the menu button's text holds the selected hour
+        String matriculeEnseignants = matriculeEnseignant.getText(); // Teacher matricule
+        String matiere = matiereId.getText(); // Subject ID
+       System.out.println(selectedClasseId+ ' ' + selectedDay +' ' + selectedHour+ ' ' + matriculeEnseignant+ ' ' + matiereId) ;
+        // Validate inputs
+        if (  classeId.isEmpty() || jour.isEmpty() || heure.isEmpty() || matriculeEnseignants.isEmpty() || matiere.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Please fill all the fields for adding a session.");
+            return;
+        }
 
+         boolean isAdded = sessionService.addSession(   classeId, matiere, jour, heure, matriculeEnseignants );
+
+         if (isAdded) {
+            showAlert(Alert.AlertType.INFORMATION, "Session added successfully.");
+            loadSessionData(); // Refresh the session table data
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Failed to add session.");
+        }
+    }
     @FXML
     public void addTeacher() {
         String matricule = getMatriculeText();
         String name = nom.getText();
         String contact = getContactText();
+        System.out.print(matricule + name  + contact);
         if ( matricule.isEmpty() || name.isEmpty() || contact.isEmpty()  ) {
             showAlert(Alert.AlertType.ERROR, "Please Enter ALL THE FIELDS ");
         }

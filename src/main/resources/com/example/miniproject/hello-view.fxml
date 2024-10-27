@@ -7,8 +7,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -99,26 +97,26 @@
                   <Label prefHeight="18.0" prefWidth="60.0" text="Jours" GridPane.rowIndex="2" />
                   <Label text="Heure" GridPane.rowIndex="3" />
                   <MenuButton fx:id="menuButtonClasse" mnemonicParsing="false" onAction="#initializeMenuButtonClasse" prefHeight="26.0" prefWidth="171.0" text="Classe" GridPane.columnIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <MenuButton fx:id="menuButtonDays" onAction="#initializeMenuButtonDays" mnemonicParsing="false" prefHeight="18.0" prefWidth="166.0" text="Jours" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <MenuButton fx:id="menuButtonHours" onAction="#initializeMenuButtonHours" mnemonicParsing="false" prefHeight="26.0" prefWidth="166.0" text="Heure" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="matiereId" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <MenuButton fx:id="menuButtonDays" mnemonicParsing="false" onAction="#initializeMenuButtonDays" prefHeight="26.0" prefWidth="166.0" text="Jours" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <MenuButton fx:id="menuButtonHours" mnemonicParsing="false" onAction="#initializeMenuButtonHours" prefHeight="28.0" prefWidth="166.0" text="Heure" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Matricue Enseignants" GridPane.rowIndex="4" />
-                  <TextField prefHeight="38.0" prefWidth="172.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="matriculeEnseignant" prefHeight="38.0" prefWidth="172.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
-            <TreeTableView layoutX="377.0" layoutY="271.0" prefHeight="122.0" prefWidth="391.0">
+            <TableView fx:id="sessionTable" layoutX="377.0" layoutY="271.0" prefHeight="122.0" prefWidth="391.0">
               <columns>
-                <TreeTableColumn prefWidth="75.0" text="Classe" />
-                <TreeTableColumn prefWidth="75.0" text="Matiere" />
-                  <TreeTableColumn prefWidth="75.0" text="Jours" />
-                  <TreeTableColumn prefWidth="75.0" text="Heure" />
-                  <TreeTableColumn prefWidth="89.4000244140625" text="Enseignant" />
+                <TableColumn fx:id="classeIdColumn" prefWidth="75.0" text="Classe" />
+                <TableColumn fx:id="matiereIdColumn" prefWidth="75.0" text="Matiere" />
+                  <TableColumn fx:id="jourColumn" prefWidth="75.0" text="Jours" />
+                  <TableColumn fx:id="heureColumn" prefWidth="75.0" text="Heure" />
+                  <TableColumn fx:id="ensIdColumn" prefWidth="89.4000244140625" text="Enseignant" />
               </columns>
-            </TreeTableView>
+            </TableView>
             <VBox layoutX="14.0" layoutY="457.0" prefHeight="61.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Enregistrer" />
-                  <Button fx:id="Requests" mnemonicParsing="false"   prefHeight="26.0" prefWidth="99.0" text="Requests" />
+                  <Button mnemonicParsing="false" onAction="#onAddSessionButtonClick" prefHeight="26.0" prefWidth="97.0" text="Enregistrer" />
+                  <Button fx:id="Requests" mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Requests" />
                </children>
             </VBox>
             <VBox layoutX="370.0" layoutY="53.0">

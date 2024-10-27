@@ -5,25 +5,23 @@ import com.example.miniproject.model.DataBaseConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import java.util.Map;
-
-public class DataFetch {
-    public Map<String, String> fetchData() {
-        Map<String, String> data = new HashMap<>();
+public class SessionsId {
+    public ArrayList<String> fetchIds() {
+       ArrayList<String> ids = new ArrayList<>();
         DataBaseConnection dbConnection = new DataBaseConnection();
         Connection connection = dbConnection.connect();
 
         try {
-            String query = "SELECT ClasseID, NomClasse FROM CLASSES";
+            String query = "SELECT seanceID FROM seances";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                String id = resultSet.getString("ClasseID");
-                String label = resultSet.getString("NomClasse");
-                data.put(id, label);
+                String id = resultSet.getString("seanceID");
+
+                ids.add(id );
             }
 
             connection.close();
@@ -31,8 +29,6 @@ public class DataFetch {
             e.printStackTrace();
         }
 
-        return data;
+        return ids;
     }
-
-
 }

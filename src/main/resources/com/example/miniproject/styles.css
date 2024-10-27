@@ -10,6 +10,7 @@
     -fx-text-fill: white;
     -fx-font-size: 10px;
     -fx-cursor: hand;
+    -fx-border-radius: 10px;
 }
 
 .button:hover {
@@ -22,11 +23,13 @@
 
 
 .menuItem {
-    -fx-background-color: #3498db;
+     -fx-pref-width: 145px;
+}
+.menuItem:hover {
+    -fx-cursor: hand;
 }
 
-/* style.css */
-.alert-confirm {
+ .alert-confirm {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
     -fx-padding: 10px 20px;
@@ -40,6 +43,9 @@
 
 
 .label {
-    -fx-text-fill: #2c3e50;
-    -fx-font-size: 10px;
+     -fx-font-size: 10px;
+ }
+.table-view {
+    -fx-background-color:  #3498db; /* Column header background color */
+    -fx-text-fill: white; /* Column header text color */
 }

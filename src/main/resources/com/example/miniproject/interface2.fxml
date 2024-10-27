@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -24,33 +23,26 @@
             <Label layoutX="122.0" layoutY="21.0" prefHeight="18.0" prefWidth="380.0" text="Les séances de cours dans la semaines d'une matiere dans une classe  " />
             <Label layoutX="14.0" layoutY="58.0" prefHeight="17.0" prefWidth="66.0" text="Classe" />
             <Label layoutX="227.0" layoutY="62.0" prefHeight="17.0" prefWidth="66.0" text="Matiére" />
-            <Button layoutX="429.0" layoutY="85.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Chercher" />
+            <Button fx:id="filterButton" layoutX="429.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleSearchFilter" prefHeight="25.0" prefWidth="125.0" text="Chercher" />
             <Label layoutX="14.0" layoutY="432.0" prefHeight="17.0" prefWidth="66.0" text="ID" />
-            <Button layoutX="208.0" layoutY="463.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="149.0" text="Supprimer" />
-            <TextField layoutX="219.0" layoutY="85.0" stylesheets="@styles.css" />
+            <Button layoutX="208.0" layoutY="463.0" mnemonicParsing="false" onAction="#deleteSession" prefHeight="25.0" prefWidth="149.0" text="Supprimer" />
             <TextField layoutX="14.0" layoutY="391.0" />
-            <MenuButton layoutX="14.0" layoutY="85.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" text="Classe">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
+            <MenuButton fx:id="menuButtonClasse" layoutX="14.0" layoutY="85.0" mnemonicParsing="false" onAction="#initializeMenuButtonClasse" prefHeight="25.0" prefWidth="135.0" text="Classe">
             </MenuButton>
-            <TableView layoutX="14.0" layoutY="153.0" prefHeight="269.0" prefWidth="814.0">
+            <TextField fx:id="subject" layoutX="222.0" layoutY="85.0" />
+            <TableView fx:id="sessionTable" layoutX="14.0" layoutY="153.0" prefHeight="269.0" prefWidth="814.0">
               <columns>
-                <TableColumn prefWidth="78.39999580383301" text="Id" />
-                <TableColumn prefWidth="87.20000457763672" text="Classe" />
-                  <TableColumn prefWidth="84.79998779296875" text="Matiere" />
-                  <TableColumn prefWidth="71.20001220703125" text="Jour " />
-                  <TableColumn prefWidth="77.60003662109375" text="Heure" />
-                  <TableColumn prefWidth="122.39999389648438" text="Nom Enseignant" />
-                  <TableColumn prefWidth="297.60003662109375" text="Contact Enseignant" />
+                  <TableColumn fx:id="sessionIdColumn" prefWidth="78.39999580383301" text="Id" />
+                  <TableColumn fx:id="classeIdColumn" prefWidth="96.79998016357422" text="Classe" />
+                  <TableColumn fx:id="subjectColumn" prefWidth="171.20001220703125" text="Matiere" />
+                  <TableColumn fx:id="dayColumn" prefWidth="92.79998779296875" text="Jour " />
+                  <TableColumn fx:id="hourColumn" prefWidth="80.80007934570312" text="Heure" />
+                  <TableColumn fx:id="teacherColumn" prefWidth="149.5999755859375" text="Nom Enseignant" />
+                  <TableColumn fx:id="contactColumn" prefWidth="158.39996337890625" text="Contact Enseignant" />
               </columns>
             </TableView>
-            <MenuButton layoutX="80.0" layoutY="534.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="135.0" text="Classe">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
+            <MenuButton fx:id="menuButtonClasseSearch" layoutX="80.0" layoutY="534.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="135.0" text="Classe">
+
             </MenuButton>
             <Label graphicTextGap="5.0" layoutX="14.0" layoutY="504.0" text="Emploi du temps de la semaine en classe ">
                <font>
@@ -58,12 +50,9 @@
                </font>
             </Label>
             <Label layoutX="14.0" layoutY="539.0" prefHeight="25.0" prefWidth="53.0" text="Classe" />
-            <Button layoutX="234.0" layoutY="535.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="125.0" text="Chercher" />
-            <MenuButton layoutX="14.0" layoutY="461.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="149.0" text="ID">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
+            <Button fx:id="classSearch" layoutX="234.0" layoutY="533.0" mnemonicParsing="false" onAction="#handleClassSearchFilter" prefHeight="25.0" prefWidth="125.0" text="Chercher" />
+            <MenuButton fx:id="menuButtonIds" layoutX="15.0" layoutY="463.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ID">
+
             </MenuButton>
          </children>
       </Pane>
