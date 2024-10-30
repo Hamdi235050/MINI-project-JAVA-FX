@@ -75,8 +75,7 @@ public class Interface2 {
         allItem.setOnAction(event -> {
             menuButtonClasse.setText("All");
             selectedClasseId = null;
-            System.out.println("Selected class: All, ID: " + selectedClasseId);
-        });
+         });
         menuButtonClasse.getItems().add(allItem);
 
          for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -100,14 +99,13 @@ public class Interface2 {
     private void initializeMenuButtonClasseSearch() {
         DataFetch dataFetch = new DataFetch();
         Map<String, String> data = dataFetch.fetchData();
-        MenuItem allItem = new MenuItem("All");
+        MenuItem allItem = new MenuItem("Tous");
         allItem.getStyleClass().add("menuItem");
 
         allItem.setOnAction(event -> {
             menuButtonClasseSearch.setText("All");
             selectedClasseIdSearch = null;
-            System.out.println("Selected class: All, ID: " + selectedClasseId);
-        });
+         });
         menuButtonClasseSearch.getItems().add(allItem);
 
         for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -145,18 +143,15 @@ public class Interface2 {
     public void deleteSession() {
         String sessionToDelete = selectedSessionId;
 
-        // Check if selectedSessionId is null or empty
-        if (sessionToDelete == null || sessionToDelete.isEmpty()) {
+         if (sessionToDelete == null || sessionToDelete.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Veuillez sélectionner un ID, s'il vous plaît.");
             alert.showAndWait();  // Display the alert
             return;  // Exit the method if no ID is selected
         }
 
-        // Attempt to delete the session
-        boolean isDeleted = scheduleService.deleteSessionById(sessionToDelete);
+         boolean isDeleted = scheduleService.deleteSessionById(sessionToDelete);
 
-        // Provide feedback based on the deletion result
-        if (isDeleted) {
+         if (isDeleted) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Session supprimée avec succès.");
             alert.showAndWait();
             loadSessionData(null, null);

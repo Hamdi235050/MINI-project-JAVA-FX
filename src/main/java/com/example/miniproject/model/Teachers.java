@@ -18,21 +18,18 @@ public class Teachers {
     private TextField contact;
 
     public void addTeacher() {
-        // Check if the TextField references are null
-        if (this.matricule == null || this.nom == null || this.contact == null) {
+         if (this.matricule == null || this.nom == null || this.contact == null) {
             System.out.println("One or more TextField references are null. Please check your FXML file.");
             return; // Exit the method early
         }
 
-        // Get the text from the fields
-        String matriculeText = matricule.getText();
+         String matriculeText = matricule.getText();
         String nomText = nom.getText();
         String contactText = contact.getText();
 
-        // Check if any TextField is empty
-        if (matriculeText.isEmpty() || nomText.isEmpty() || contactText.isEmpty()) {
+         if (matriculeText.isEmpty() || nomText.isEmpty() || contactText.isEmpty()) {
             System.out.println("Please fill in all fields.");
-            return; // Exit the method early
+            return;
         }
 
         String query = "INSERT INTO enseignants (matricule, nom, contact) VALUES (?, ?, ?)";
@@ -40,13 +37,11 @@ public class Teachers {
         try (Connection connection = DataBaseConnection.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            // Set the parameters
             preparedStatement.setString(1, matriculeText);
             preparedStatement.setString(2, nomText);
             preparedStatement.setString(3, contactText);
 
-            // Execute the insert operation
-            int rowsAffected = preparedStatement.executeUpdate();
+             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("A new Teacher was inserted successfully!");
             }

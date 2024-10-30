@@ -100,7 +100,6 @@ public class MainController {
              menuItem.getStyleClass().add("menuItem");
 
              menuItem.setOnAction(event -> {
-                handleMenuItemClick(id);
                 menuButtonClasse.setText(label);
                 selectedClasseId = id;
             });
@@ -108,9 +107,7 @@ public class MainController {
             menuButtonClasse.getItems().add(menuItem);
         }
     }
-    private void handleMenuItemClick(String selectedItem) {
-         System.out.println("Selected: " + selectedItem);
-    }
+
     @FXML
     private void initializeMenuButtonDays() {
         Map<Integer, String> daysOfWeek = new HashMap<>();
@@ -130,48 +127,40 @@ public class MainController {
              menuItem.getStyleClass().add("menuItem");
 
              menuItem.setOnAction(event -> {
-                handleMenuItemClickDays(key);
                 menuButtonDays.setText(day);
                 selectedDay = day ;
             });
 
-             menuButtonDays.getItems().add(menuItem); // Add the menu item to the menu button
+             menuButtonDays.getItems().add(menuItem);
         }
     }
 
-    private void handleMenuItemClickDays(Integer selectedItem) {
-        System.out.println("Selected: " + selectedItem);
-    }
-    @FXML
+     @FXML
     private void initializeMenuButtonHours() {
         List<String> hours = new ArrayList<>();
         for (int i = 8; i <= 17; i++) {
             hours.add(String.format("%02d:00", i));
         }
-        selectedHour= hours.get(0);
         for (String hour : hours) {
             MenuItem menuItem = new MenuItem(hour);
             menuItem.getStyleClass().add("menuItem");
 
             menuItem.setOnAction(event -> {
-                handleMenuItemClickHours(hour);
-                menuButtonHours.setText(hour);
+                 menuButtonHours.setText(hour);
+                selectedHour= hour;
+
             });
 
              menuButtonHours.getItems().add(menuItem);
         }
     }
 
-    private void handleMenuItemClickHours(String selectedItem) {
-        System.out.println("Selected: " + selectedItem);
-    }
-    private void loadSessionData() {
+     private void loadSessionData() {
         ObservableList<Session> sessions = sessionService.loadSessionData();
-        sessionTable.setItems(sessions); // Load the data into the table
+        sessionTable.setItems(sessions);
     }
     @FXML
     public void initialize() {
-        // Configure table columns
         matriculeColumn.setCellValueFactory(new PropertyValueFactory<>("matricule"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         contactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
@@ -207,14 +196,12 @@ public class MainController {
     }
     @FXML
     private void onAddSessionButtonClick() {
-         String classeId = selectedClasseId ; // Assuming the menu button's text holds the selected class
-        String jour =selectedDay   ; // Assuming the menu button's text holds the selected day
-        String heure = selectedHour; // Assuming the menu button's text holds the selected hour
-        String matriculeEnseignants = matriculeEnseignant.getText(); // Teacher matricule
-        String matiere = matiereId.getText(); // Subject ID
-       System.out.println(selectedClasseId+ ' ' + selectedDay +' ' + selectedHour+ ' ' + matriculeEnseignant+ ' ' + matiereId) ;
-        // Validate inputs
-        if (  classeId.isEmpty() || jour.isEmpty() || heure.isEmpty() || matriculeEnseignants.isEmpty() || matiere.isEmpty()) {
+         String classeId = selectedClasseId ;
+        String jour =selectedDay   ;
+        String heure = selectedHour;
+        String matriculeEnseignants = matriculeEnseignant.getText();
+        String matiere = matiereId.getText();
+          if (  classeId.isEmpty() || jour.isEmpty() || heure.isEmpty() || matriculeEnseignants.isEmpty() || matiere.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Please fill all the fields for adding a session.");
             return;
         }
@@ -222,10 +209,10 @@ public class MainController {
          boolean isAdded = sessionService.addSession(   classeId, matiere, jour, heure, matriculeEnseignants );
 
          if (isAdded) {
-            showAlert(Alert.AlertType.INFORMATION, "Session added successfully.");
-            loadSessionData(); // Refresh the session table data
+            showAlert(Alert.AlertType.INFORMATION, "Session ajoutée avec succès.");
+            loadSessionData();
         } else {
-            showAlert(Alert.AlertType.ERROR, "Failed to add session.");
+            showAlert(Alert.AlertType.ERROR, "Échec de l'ajout de la session.");
         }
     }
     @FXML
@@ -235,24 +222,22 @@ public class MainController {
         String contact = getContactText();
         System.out.print(matricule + name  + contact);
         if ( matricule.isEmpty() || name.isEmpty() || contact.isEmpty()  ) {
-            showAlert(Alert.AlertType.ERROR, "Please Enter ALL THE FIELDS ");
+            showAlert(Alert.AlertType.ERROR, "Veuillez entrer TOUS LES CHAMPS. ");
         }
         else if (teacherService.addTeacher(matricule, name, contact)) {
-            showAlert(Alert.AlertType.INFORMATION, "Teacher added successfully.");
+            showAlert(Alert.AlertType.INFORMATION, "L'enseignant"+name+ "ajouté avec succès.");
             loadTeacherData(null,null); // Refresh the table data
         } else {
-            showAlert(Alert.AlertType.ERROR, "Failed to add the teacher.");
+            showAlert(Alert.AlertType.ERROR, "Échec de l'ajout de l'enseignant.");
         }
     }
 
     private void loadTeacherData(String matriculeFilter, String contactFilter) {
         if (teacherTable == null) {
-            System.out.println("teacherTable is null!");
-            return;
+             return;
         }
         ObservableList<Teacher> teachers = teacherService.loadTeacherData(matriculeFilter, contactFilter);
-        teacherTable.setItems(teachers); // Now this should work without a NullPointerException
-
+        teacherTable.setItems(teachers);
     }
 
     @FXML
@@ -264,13 +249,13 @@ public class MainController {
            Alert alert = new Alert(Alert.AlertType.ERROR);
            alert.setTitle("Error");
            alert.setHeaderText(null);
-           alert.setHeaderText("error matricule or name or contact is emty ");
+           alert.setHeaderText("le matricule, le nom ou le contact est vide. ");
        }
         if (teacherService.addTeacher(matricule, name, contact)) {
-            showAlert(Alert.AlertType.INFORMATION, "Teacher added successfully.");
-            loadTeacherData(null,null); // Refresh the table data
+            showAlert(Alert.AlertType.INFORMATION,  "L'enseignant"+name+ "ajouté avec succès.");
+            loadTeacherData(null,null);
         } else {
-            showAlert(Alert.AlertType.ERROR, "Failed to add the teacher.");
+            showAlert(Alert.AlertType.ERROR, "Échec de l'ajout de l'enseignant.");
         }
     }
     @FXML
@@ -283,63 +268,45 @@ public class MainController {
     private void onModifyButtonClick() {
         Teacher selectedTeacher = teacherTable.getSelectionModel().getSelectedItem();
 
-        // Check if a teacher is selected or if matricule field is filled
-        String matricule = selectedTeacher != null ? selectedTeacher.getMatricule() : getMatriculeText().trim(); // Assuming you have a TextField for matricule input
-
-        // If both the selected teacher and matricule input are absent, show a warning
-        if (selectedTeacher == null && matricule.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Please select a teacher or enter a matricule.");
+         String matricule = selectedTeacher != null ? selectedTeacher.getMatricule() : getMatriculeText().trim();
+         if (selectedTeacher == null && matricule.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner un enseignant ou entrer un matricule.");
             return;
         }
 
-        // Get the updated name and contact from the input fields
-        String name = nom.getText().trim(); // Get and trim the name input
-        String contact = getContactText().trim(); // Get and trim the contact input
+         String name = nom.getText().trim();
+        String contact = getContactText().trim();
 
-        // Validate inputs
-        if (name.isEmpty() || contact.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Name and contact fields cannot be empty.");
+         if (name.isEmpty() || contact.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Les champs nom et contact ne peuvent pas être vides");
             return;
         }
 
-        // Check if the matricule exists for an update
-        if (teacherService.updateTeacher(matricule, name, contact)) {
-            showAlert(Alert.AlertType.INFORMATION, "Teacher updated successfully.");
-            loadTeacherData(null, null); // Refresh the table data
+         if (teacherService.updateTeacher(matricule, name, contact)) {
+            showAlert(Alert.AlertType.INFORMATION, "Enseignant mis à jour avec succès.");
+            loadTeacherData(null, null);
          } else {
-            showAlert(Alert.AlertType.ERROR, "Failed to update the teacher. Please check the details and try again.");
+            showAlert(Alert.AlertType.ERROR, "Échec de la mise à jour de l'enseignant. Veuillez vérifier les détails et réessayer.");
         }
     }
 
     @FXML
     private void onDeleteButtonClick() {
-        // Attempt to get the selected teacher from the table
-        Teacher selectedTeacher = teacherTable.getSelectionModel().getSelectedItem();
-        System.out.println("Selected: " + selectedTeacher.getMatricule());
-        String matricule = null;
+         Teacher selectedTeacher = teacherTable.getSelectionModel().getSelectedItem();
+         String matricule = (selectedTeacher != null) ? selectedTeacher.getMatricule() : getMatriculeText().trim();
 
-        // If a teacher is selected, get their matricule
-        if (selectedTeacher != null) {
-            matricule = selectedTeacher.getMatricule();
-        } else {
-            // If no teacher is selected, check the matriculeField for input
-            matricule = getMatriculeText().trim();
-        }
-
-        // Check if matricule is null or empty
-        if (matricule == null || matricule.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Please select a teacher to delete or enter a matricule.");
+         if (matricule == null || matricule.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner un enseignant à supprimer ou entrer un matricule.");
             return;
         }
 
-        // Perform deletion
-        if (teacherService.deleteTeacher(matricule)) {
-            showAlert(Alert.AlertType.INFORMATION, "Teacher deleted successfully.");
-            loadTeacherData(null, null); // Refresh the table data
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Failed to delete the teacher.");
-        }
+         teacherService.deleteTeacher(matricule);
+
+
+        loadTeacherData(null,null);
+        showAlert(Alert.AlertType.INFORMATION, "Enseignant Avec matricule " + matricule + " est supprimer.");
     }
+
 
     private void showAlert(Alert.AlertType alertType, String message) {
         Alert alert = new Alert(alertType);
